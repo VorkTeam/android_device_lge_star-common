@@ -21,8 +21,12 @@
 #include <media/ToneGenerator.h>
 #include <utils/String8.h>
 
-namespace android {
+#include <hardware_legacy/AudioSystemLegacy.h>
 
+namespace android_audio_legacy {
+    using android::Vector;
+    using android::String8;
+    using android::ToneGenerator;
 
 // ----------------------------------------------------------------------------
 
@@ -64,10 +68,10 @@ public:
     // indicate a change in device connection status
     virtual status_t setDeviceConnectionState(AudioSystem::audio_devices device,
                                           AudioSystem::device_connection_state state,
-                                          const char *device_address) = 0; // x8 
+                                          const char *device_address) = 0;
     // retreive a device connection status
     virtual AudioSystem::device_connection_state getDeviceConnectionState(AudioSystem::audio_devices device,
-                                                                          const char *device_address) = 0; // 0xC (12)
+                                                                          const char *device_address) = 0;
     // indicate a change in phone state. Valid phones states are defined by AudioSystem::audio_mode
     virtual void setPhoneState(int state) = 0;
     // indicate a change in ringer mode
@@ -78,8 +82,8 @@ public:
     virtual AudioSystem::forced_config getForceUse(AudioSystem::force_use usage) = 0;
     // set a system property (e.g. camera sound always audible)
     virtual void setSystemProperty(const char* property, const char* value) = 0;
-
-
+    // check proper initialization
+    virtual status_t initCheck() = 0;
 
     //
     // Audio routing query functions
@@ -90,7 +94,7 @@ public:
                                         uint32_t samplingRate = 0,
                                         uint32_t format = AudioSystem::FORMAT_DEFAULT,
                                         uint32_t channels = 0,
-                                        AudioSystem::output_flags flags = AudioSystem::OUTPUT_FLAG_INDIRECT) = 0; // 0x24 (36, good)
+                                        AudioSystem::output_flags flags = AudioSystem::OUTPUT_FLAG_INDIRECT) = 0;
     // indicates to the audio policy manager that the output starts being used by corresponding stream.
     virtual status_t startOutput(audio_io_handle_t output,
                                  AudioSystem::stream_type stream,
@@ -113,7 +117,7 @@ public:
     // indicates to the audio policy manager that the input stops being used.
     virtual status_t stopInput(audio_io_handle_t input) = 0;
     // releases the input.
-    virtual void releaseInput(audio_io_handle_t input) = 0; // 0x40 (64, good)
+    virtual void releaseInput(audio_io_handle_t input) = 0;
 
     //
     // volume control functions
@@ -122,31 +126,35 @@ public:
     // initialises stream volume conversion parameters by specifying volume index range.
     virtual void initStreamVolume(AudioSystem::stream_type stream,
                                       int indexMin,
-                                      int indexMax) = 0; // 0x44
+                                      int indexMax) = 0;
 
     // sets the new stream volume at a level corresponding to the supplied index
-    virtual status_t setStreamVolumeIndex(AudioSystem::stream_type stream, int index) = 0; // 0x48
+    virtual status_t setStreamVolumeIndex(AudioSystem::stream_type stream, int index) = 0;
     // retreive current volume index for the specified stream
-    virtual status_t getStreamVolumeIndex(AudioSystem::stream_type stream, int *index) = 0; // 0x4C (76)
+    virtual status_t getStreamVolumeIndex(AudioSystem::stream_type stream, int *index) = 0;
 
-    /* LGE extensions */
     virtual status_t setDeviceMaxVolume(AudioSystem::stream_type stream) { return 666; };
     virtual status_t getDeviceMaxVolume(AudioSystem::stream_type stream) { return 666; };
     virtual status_t setHeadsetGainControl(AudioSystem::stream_type stream) { return 666; };
     virtual status_t getHeadsetGainControl(AudioSystem::stream_type stream) { return 666; };
-    /* End of LGE extensions */
 
     // return the strategy corresponding to a given stream type
-    virtual uint32_t getStrategyForStream(AudioSystem::stream_type stream) = 0; // 0x60 (96, good)
+    virtual uint32_t getStrategyForStream(AudioSystem::stream_type stream) = 0;
+
+    // return the enabled output devices for the given stream type
+    virtual uint32_t getDevicesForStream(AudioSystem::stream_type stream) = 0;
 
     // Audio effect management
     virtual audio_io_handle_t getOutputForEffect(effect_descriptor_t *desc) = 0;
     virtual status_t registerEffect(effect_descriptor_t *desc,
-                                    audio_io_handle_t output,
+                                    audio_io_handle_t io,
                                     uint32_t strategy,
                                     int session,
                                     int id) = 0;
-    virtual status_t unregisterEffect(int id) = 0; // 0x6C, good
+    virtual status_t unregisterEffect(int id) = 0;
+    virtual status_t setEffectEnabled(int id, bool enabled) = 0;
+
+    virtual bool isStreamActive(int stream, uint32_t inPastMs = 0) const = 0;
 
     //dump state
     virtual status_t    dump(int fd) = 0;
@@ -225,10 +233,6 @@ public:
                                      audio_io_handle_t srcOutput,
                                      audio_io_handle_t dstOutput) = 0;
 
-#ifdef HAVE_FM_RADIO
-    // set FM volume.
-    virtual status_t setFmVolume(float volume, int delayMs = 0) { return 0; }
-#endif
 };
 
 extern "C" AudioPolicyInterface* createAudioPolicyManager(AudioPolicyClientInterface *clientInterface);

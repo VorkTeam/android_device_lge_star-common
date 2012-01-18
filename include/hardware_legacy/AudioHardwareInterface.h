@@ -26,10 +26,17 @@
 #include <utils/String8.h>
 
 #include <media/IAudioFlinger.h>
-#include "media/AudioSystem.h"
+#include <hardware_legacy/AudioSystemLegacy.h>
 
+#include <system/audio.h>
+#include <hardware/audio.h>
 
-namespace android {
+#include <cutils/bitops.h>
+
+namespace android_audio_legacy {
+    using android::Vector;
+    using android::String16;
+    using android::String8;
 
 // ----------------------------------------------------------------------------
 
@@ -62,7 +69,7 @@ public:
     /**
      * return the frame size (number of bytes per sample).
      */
-    uint32_t    frameSize() const { return AudioSystem::popCount(channels())*((format()==AudioSystem::PCM_16_BIT)?sizeof(int16_t):sizeof(int8_t)); }
+    uint32_t    frameSize() const { return popcount(channels())*((format()==AUDIO_FORMAT_PCM_16_BIT)?sizeof(int16_t):sizeof(int8_t)); }
 
     /**
      * return the audio hardware driver latency in milli seconds.
@@ -165,6 +172,8 @@ public:
     // Unit: the number of input audio frames
     virtual unsigned int  getInputFramesLost() const = 0;
 
+    virtual status_t addAudioEffect(effect_handle_t effect) = 0;
+    virtual status_t removeAudioEffect(effect_handle_t effect) = 0;
 };
 
 /**
@@ -195,6 +204,7 @@ public:
 
     virtual status_t    setSpeakerBoostModeOn(bool mode);
     virtual status_t    setLGMicModeOn(bool mode);
+
     /**
      * set the audio volume for all audio activities other than voice call.
      * Range between 0.0 and 1.0. If any value other than NO_ERROR is returned,
@@ -252,12 +262,6 @@ public:
 protected:
 
     virtual status_t dump(int fd, const Vector<String16>& args) = 0;
-
-#ifdef HAVE_FM_RADIO
-public:
-    /** set the fm volume. Range is between 0.0 and 1.0 */
-    virtual status_t    setFmVolume(float volume) { return 0; }
-#endif
 };
 
 // ----------------------------------------------------------------------------

@@ -25,7 +25,8 @@
 #include <hardware_legacy/AudioHardwareBase.h>
 
 
-namespace android {
+namespace android_audio_legacy {
+    using android::Mutex;
 
 class A2dpAudioInterface : public AudioHardwareBase
 {
@@ -76,9 +77,6 @@ public:
                                 status_t *status,
                                 AudioSystem::audio_in_acoustics acoustics);
     virtual    void        closeInputStream(AudioStreamIn* in);
-#ifdef HAVE_FM_RADIO
-    virtual status_t    setFmVolume(float volume);
-#endif
 //    static AudioHardwareInterface* createA2dpInterface();
 
 protected:
@@ -115,6 +113,7 @@ private:
                 status_t    setAddress(const char* address);
                 status_t    setBluetoothEnabled(bool enabled);
                 status_t    setSuspended(bool onOff);
+                status_t    standby_l();
 
     private:
                 int         mFd;
@@ -128,6 +127,8 @@ private:
                 uint32_t    mDevice;
                 bool        mClosing;
                 bool        mSuspended;
+                nsecs_t     mLastWriteTime;
+                uint32_t    mBufferDurationUs;
     };
 
     friend class A2dpAudioStreamOut;
