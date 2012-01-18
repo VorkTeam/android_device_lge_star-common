@@ -9,7 +9,8 @@ PRODUCT_COPY_FILES += \
 # Board-specific init
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/ueventd.tegra.rc:root/ueventd.tegra.rc \
-    $(LOCAL_PATH)/init_recovery.rc:root/init_recovery.rc
+    $(LOCAL_PATH)/init_recovery.rc:root/init_recovery.rc \
+    $(LOCAL_PATH)/permission.sh:root/sbin/permission.sh
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/recovery/postrecoveryboot.sh:recovery/root/sbin/postrecoveryboot.sh \
