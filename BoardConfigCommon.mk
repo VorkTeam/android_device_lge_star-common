@@ -21,7 +21,6 @@ TARGET_SPECIFIC_HEADER_PATH := device/lge/star-common/include
 
 BOARD_HAS_NO_SELECT_BUTTON := true
 
-BOARD_USES_GENERIC_AUDIO := true
 BOARD_USES_AUDIO_LEGACY := true
 # Use dirty hack to allow froyo libaudio
 
