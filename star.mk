@@ -72,9 +72,6 @@ PRODUCT_PACKAGES += \
     libsecureclock \
     screencap \
     hwprops \
-    audio.primary.p990 \
-    audio_policy.p990 \
-    lights.p990 \
     com.android.future.usb.accessory
 
 PRODUCT_BUILD_PROP_OVERRIDES += BUILD_UTC_DATE=0
