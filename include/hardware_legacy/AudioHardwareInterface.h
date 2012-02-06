@@ -202,8 +202,8 @@ public:
     /** set the audio volume of a voice call. Range is between 0.0 and 1.0 */
     virtual status_t    setVoiceVolume(float volume) = 0;
 
-    virtual status_t    setSpeakerBoostModeOn(bool mode);
-    virtual status_t    setLGMicModeOn(bool mode);
+    virtual status_t    setSpeakerBoostModeOn(bool mode) = 0;
+    virtual status_t    setLGMicModeOn(bool mode) = 0;
 
     /**
      * set the audio volume for all audio activities other than voice call.
@@ -219,10 +219,10 @@ public:
      */
     virtual status_t    setMode(int mode) = 0;
 
-    virtual status_t    setVoIPCallState(bool state);
-    virtual status_t    getVoIPCallState(bool *state);
-    virtual status_t    setForceRoutingMode(int mode);
-    virtual status_t    getForceRoutingMode(int *mode);
+    virtual status_t    setVoIPCallState(bool state) = 0;
+    virtual status_t    getVoIPCallState(bool *state) = 0;
+    virtual status_t    setForceRoutingMode(int mode) = 0;
+    virtual status_t    getForceRoutingMode(int *mode) = 0;
 
     // mic mute
     virtual status_t    setMicMute(bool state) = 0;
@@ -271,3 +271,4 @@ extern "C" AudioHardwareInterface* createAudioHardware(void);
 }; // namespace android
 
 #endif // ANDROID_AUDIO_HARDWARE_INTERFACE_H
+
