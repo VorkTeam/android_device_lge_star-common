@@ -36,8 +36,8 @@ TARGET_DONT_SET_AUDIO_AAC_FORMAT := true
 BOARD_HAS_NO_MISC_PARTITION := true
 
 BOARD_WLAN_DEVICE := bcm4329
-WIFI_DRIVER_FW_STA_PATH		:= "/system/etc/wl/rtecdc.bin"
-WIFI_DRIVER_FW_AP_PATH		:= "/system/etc/wl/rtecdc-apsta.bin"
+WIFI_DRIVER_FW_PATH_STA		:= "/system/etc/wl/rtecdc.bin"
+WIFI_DRIVER_FW_PATH_AP		:= "/system/etc/wl/rtecdc-apsta.bin"
 WIFI_DRIVER_MODULE_NAME		:= "wireless"
 WIFI_DRIVER_MODULE_PATH		:= "/system/lib/modules/wireless.ko"
 WIFI_DRIVER_MODULE_ARG		:= "firmware_path=/etc/wl/rtecdc.bin nvram_path=/etc/wl/nvram.txt config_path=/data/misc/wifi/config"
@@ -65,5 +65,3 @@ BOARD_FORCE_STATIC_A2DP := true
 BOARD_USE_LEGACY_TOUCHSCREEN := true
 
 BOARD_ALWAYS_INSECURE := true
-
-TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/usb_mass_storage/lun0/file
