@@ -83,7 +83,8 @@ public:
     // set a system property (e.g. camera sound always audible)
     virtual void setSystemProperty(const char* property, const char* value) = 0;
 
-
+    // check proper initialization
+    virtual status_t initCheck() = 0;
 
     //
     // Audio routing query functions
