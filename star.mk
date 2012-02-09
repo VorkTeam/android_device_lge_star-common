@@ -72,6 +72,7 @@ PRODUCT_PACKAGES += \
     libsecureclock \
     screencap \
     hwprops \
+    camera.tegra \
     com.android.future.usb.accessory
 
 PRODUCT_BUILD_PROP_OVERRIDES += BUILD_UTC_DATE=0
