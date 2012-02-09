@@ -3,7 +3,6 @@ COMMON_GLOBAL_CFLAGS += -DREVERSE_FFC_MIRROR_LOGIC -DMISSING_EGL_EXTERNAL_IMAGE 
 BOARD_NO_ALLOW_DEQUEUE_CURRENT_BUFFER := true
 
 BOARD_USE_SKIA_LCDTEXT := true
-USE_OPENGL_RENDERER := true
 
 # inherit from the proprietary version
 -include vendor/lge/star-common/BoardConfigVendor.mk
